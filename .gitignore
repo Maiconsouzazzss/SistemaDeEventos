@@ -1,0 +1,15 @@
+# Ignorar arquivos e pastas desnecessárias da IDE
+.settings/
+.metadata/
+.classpath
+.project
+.recommenders/
+bin/
+build/
+target/
+*.log
+*.class
+lixeira/
+.configurações/
+.caminho de classe/
+.projeto/

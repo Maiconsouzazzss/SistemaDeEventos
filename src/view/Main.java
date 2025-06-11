@@ -86,9 +86,16 @@ public class Main {
     }
 
     private static void listarEventos() {
-        System.out.println("\nEventos cadastrados:");
-        for (Event e : eventManager.getAllEvents()) {
-            System.out.println(e);
+        System.out.println("\nEventos cadastrados (ordenados por data):");
+        for (Event e : eventManager.getEventsOrderedByDate()) {
+            System.out.println("Nome: " + e.getName());
+            System.out.println("Categoria: " + e.getCategory());
+            System.out.println("Endereço: " + e.getAddress());
+            System.out.println("Data e Hora: " + e.getDateTime());
+            System.out.println("Descrição: " + e.getDescription());
+            System.out.println("----------------------------");
         }
     }
+
+
 }

@@ -25,6 +25,7 @@ public class Main {
             System.out.println("3 - Participar de evento");
             System.out.println("4 - Cancelar participação");
             System.out.println("5 - Ver meus eventos");
+            System.out.println("6 - Ver participantes de um evento");
             System.out.println("0 - Sair");
             System.out.print("Escolha uma opção: ");
 
@@ -46,6 +47,9 @@ public class Main {
                 break;
             case 5:
                 listarMeusEventos();
+                break;
+            case 6:
+                verParticipantesDoEvento();
                 break;
             case 0:
                 System.out.println("Saindo...");
@@ -143,6 +147,29 @@ public class Main {
             System.out.println("Evento cadastrado com sucesso!");
         } catch (Exception e) {
             System.out.println("Formato de data/hora inválido. Tente novamente.");
+        }
+    }
+    private static void verParticipantesDoEvento() {
+        listarEventos();
+        System.out.print("Digite o número do evento para ver participantes: ");
+        int index = scanner.nextInt();
+        scanner.nextLine();
+
+        if (index < 0 || index >= eventManager.getAllEvents().size()) {
+            System.out.println("Evento inválido!");
+            return;
+        }
+
+        Event evento = eventManager.getAllEvents().get(index);
+        List<User> participantes = evento.getParticipants();
+
+        if (participantes.isEmpty()) {
+            System.out.println("Nenhum participante neste evento.");
+        } else {
+            System.out.println("Participantes do evento " + evento.getName() + ":");
+            for (User user : participantes) {
+                System.out.printf("- %s (%s - %s)\n", user.getName(), user.getEmail(), user.getCity());
+            }
         }
     }
 

@@ -51,6 +51,7 @@ public class Main {
         }
     }
 
+    // Lista todos os eventos ordenados pela data
     private static void listarEventos() {
         List<Event> eventos = eventManager.getEventsOrderedByDate();
         System.out.println("\nEventos disponíveis:");
@@ -60,6 +61,7 @@ public class Main {
         }
     }
 
+    // Permite que o usuário participe de um evento
     private static void participarEvento() {
         listarEventos();
         System.out.print("Digite o número do evento para participar: ");
@@ -75,6 +77,7 @@ public class Main {
         System.out.println("Participação confirmada!");
     }
 
+    // Permite que o usuário cancele a participação em um evento
     private static void cancelarParticipacao() {
         List<Event> meusEventos = eventManager.getEventsUserIsParticipating(currentUser);
         System.out.println("\nEventos que você está participando:");
@@ -92,11 +95,18 @@ public class Main {
             return;
         }
 
+        // Encontra o índice do evento no eventoManager para cancelar participação corretamente
         Event eventoParaCancelar = meusEventos.get(index);
-        eventManager.cancelParticipation(eventManager.getAllEvents().indexOf(eventoParaCancelar), currentUser);
-        System.out.println("Participação cancelada!");
+        int indiceNoGerenciador = eventManager.getAllEvents().indexOf(eventoParaCancelar);
+        if (indiceNoGerenciador >= 0) {
+            eventManager.cancelParticipation(indiceNoGerenciador, currentUser);
+            System.out.println("Participação cancelada!");
+        } else {
+            System.out.println("Erro ao cancelar participação. Evento não encontrado.");
+        }
     }
 
+    // Lista os eventos nos quais o usuário está participando
     private static void listarMeusEventos() {
         List<Event> meusEventos = eventManager.getEventsUserIsParticipating(currentUser);
         System.out.println("\nSeus eventos:");

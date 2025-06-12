@@ -6,7 +6,6 @@ import util.FileHandler;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 public class EventManager {
 
     private List<Event> events;
@@ -17,7 +16,7 @@ public class EventManager {
 
     public void addEvent(Event event) {
         events.add(event);
-        FileHandler.saveEvents(events); // salva ao adicionar
+        FileHandler.saveEvents(events);
     }
 
     public List<Event> getAllEvents() {
@@ -33,7 +32,7 @@ public class EventManager {
     public void participateInEvent(int index, User user) {
         Event event = events.get(index);
         event.addParticipant(user);
-        FileHandler.saveEvents(events); // salva após alteração
+        FileHandler.saveEvents(events);
     }
 
     public void cancelParticipation(int index, User user) {
@@ -47,5 +46,5 @@ public class EventManager {
                 .filter(event -> event.isParticipating(user))
                 .collect(Collectors.toList());
     }
-}
 
+}

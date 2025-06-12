@@ -1,6 +1,8 @@
 package model1;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Event {
 
@@ -9,6 +11,7 @@ public class Event {
     private String category;
     private LocalDateTime dateTime;
     private String description;
+    private List<User> participants;  // novo atributo
 
     public Event(String name, String address, String category, LocalDateTime dateTime, String description) {
         this.name = name;
@@ -16,31 +19,28 @@ public class Event {
         this.category = category;
         this.dateTime = dateTime;
         this.description = description;
+        this.participants = new ArrayList<>();  // inicializa a lista
     }
 
-    public String getName() {
-        return name;
+    // getters e setters aqui...
+
+    // métodos para participação
+    public void addParticipant(User user) {
+        if (!participants.contains(user)) {
+            participants.add(user);
+        }
     }
 
-    public String getAddress() {
-        return address;
+    public void removeParticipant(User user) {
+        participants.remove(user);
     }
 
-    public String getCategory() {
-        return category;
+    public boolean isParticipating(User user) {
+        return participants.contains(user);
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    @Override
-    public String toString() {
-        return "Evento: " + name + "\nCategoria: " + category + "\nEndereço: " + address +
-               "\nData e Hora: " + dateTime + "\nDescrição: " + description;
+    public List<User> getParticipants() {
+        return participants;
     }
 }
+

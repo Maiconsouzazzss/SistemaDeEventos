@@ -1,11 +1,12 @@
 package view;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Scanner;
+
 import controller.EventManager;
 import model1.Event;
 import model1.User;
-
-import java.util.List;
-import java.util.Scanner;
 
 public class Main {
 
@@ -19,10 +20,11 @@ public class Main {
 
         while (true) {
             System.out.println("\n=== Sistema de Eventos ===");
-            System.out.println("1 - Listar eventos");
-            System.out.println("2 - Participar de evento");
-            System.out.println("3 - Cancelar participação");
-            System.out.println("4 - Ver meus eventos");
+            System.out.println("1 - Cadastrar novo evento");
+            System.out.println("2 - Listar eventos");
+            System.out.println("3 - Participar de evento");
+            System.out.println("4 - Cancelar participação");
+            System.out.println("5 - Ver meus eventos");
             System.out.println("0 - Sair");
             System.out.print("Escolha uma opção: ");
 
@@ -30,24 +32,28 @@ public class Main {
             scanner.nextLine(); // limpar buffer
 
             switch (opcao) {
-                case 1:
-                    listarEventos();
-                    break;
-                case 2:
-                    participarEvento();
-                    break;
-                case 3:
-                    cancelarParticipacao();
-                    break;
-                case 4:
-                    listarMeusEventos();
-                    break;
-                case 0:
-                    System.out.println("Saindo...");
-                    System.exit(0);
-                default:
-                    System.out.println("Opção inválida!");
-            }
+            case 1:
+                cadastrarEvento();
+                break;
+            case 2:
+                listarEventos();
+                break;
+            case 3:
+                participarEvento();
+                break;
+            case 4:
+                cancelarParticipacao();
+                break;
+            case 5:
+                listarMeusEventos();
+                break;
+            case 0:
+                System.out.println("Saindo...");
+                System.exit(0);
+            default:
+                System.out.println("Opção inválida!");
+        }
+
         }
     }
 
@@ -114,4 +120,30 @@ public class Main {
             System.out.printf("- %s (%s) - %s\n", e.getName(), e.getCategory(), e.getDateTime());
         }
     }
+    private static void cadastrarEvento() {
+        System.out.print("Nome do evento: ");
+        String nome = scanner.nextLine();
+
+        System.out.print("Endereço: ");
+        String endereco = scanner.nextLine();
+
+        System.out.print("Categoria: ");
+        String categoria = scanner.nextLine();
+
+        System.out.print("Data e hora (formato: yyyy-MM-ddTHH:mm): ");
+        String dataHoraStr = scanner.nextLine();
+        
+        System.out.print("Descrição: ");
+        String descricao = scanner.nextLine();
+
+        try {
+            LocalDateTime dataHora = LocalDateTime.parse(dataHoraStr);
+            Event novoEvento = new Event(nome, endereco, categoria, dataHora, descricao);
+            eventManager.addEvent(novoEvento);
+            System.out.println("Evento cadastrado com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Formato de data/hora inválido. Tente novamente.");
+        }
+    }
+
 }

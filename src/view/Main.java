@@ -1,101 +1,107 @@
 package view;
 
-import java.time.LocalDateTime;
-import java.util.Scanner;
-
 import controller.EventManager;
 import model1.Event;
 import model1.User;
 
+import java.util.List;
+import java.util.Scanner;
+
 public class Main {
 
     private static EventManager eventManager = new EventManager();
-    private static User currentUser;
     private static Scanner scanner = new Scanner(System.in);
+    private static User currentUser;
 
     public static void main(String[] args) {
-        System.out.println("Bem-vindo ao Sistema de Eventos!");
+        // Cria um usuário fixo para testes, depois você pode implementar cadastro
+        currentUser = new User("Maico", "maico@email.com", "CidadeX");
 
-        // Cadastrar usuário inicial
-        cadastrarUsuario();
-
-        boolean running = true;
-        while (running) {
-            System.out.println("\nMenu:");
-            System.out.println("1. Cadastrar evento");
-            System.out.println("2. Listar eventos");
-            System.out.println("3. Sair");
+        while (true) {
+            System.out.println("\n=== Sistema de Eventos ===");
+            System.out.println("1 - Listar eventos");
+            System.out.println("2 - Participar de evento");
+            System.out.println("3 - Cancelar participação");
+            System.out.println("4 - Ver meus eventos");
+            System.out.println("0 - Sair");
             System.out.print("Escolha uma opção: ");
-            String opcao = scanner.nextLine();
+
+            int opcao = scanner.nextInt();
+            scanner.nextLine(); // limpar buffer
 
             switch (opcao) {
-                case "1":
-                    cadastrarEvento();
-                    break;
-                case "2":
+                case 1:
                     listarEventos();
                     break;
-                case "3":
-                    running = false;
-                    System.out.println("Saindo... Obrigado por usar o sistema!");
+                case 2:
+                    participarEvento();
                     break;
+                case 3:
+                    cancelarParticipacao();
+                    break;
+                case 4:
+                    listarMeusEventos();
+                    break;
+                case 0:
+                    System.out.println("Saindo...");
+                    System.exit(0);
                 default:
-                    System.out.println("Opção inválida.");
+                    System.out.println("Opção inválida!");
             }
         }
     }
 
-    private static void cadastrarUsuario() {
-        System.out.println("Cadastro de usuário:");
-        System.out.print("Nome: ");
-        String nome = scanner.nextLine();
-        System.out.print("Email: ");
-        String email = scanner.nextLine();
-        System.out.print("Cidade: ");
-        String cidade = scanner.nextLine();
-
-        currentUser = new User(nome, email, cidade);
-        System.out.println("Usuário cadastrado com sucesso!");
+    private static void listarEventos() {
+        List<Event> eventos = eventManager.getEventsOrderedByDate();
+        System.out.println("\nEventos disponíveis:");
+        for (int i = 0; i < eventos.size(); i++) {
+            Event e = eventos.get(i);
+            System.out.printf("%d - %s (%s) - %s\n", i, e.getName(), e.getCategory(), e.getDateTime());
+        }
     }
 
-    private static void cadastrarEvento() {
-        System.out.println("Cadastro de evento:");
-        System.out.print("Nome: ");
-        String nome = scanner.nextLine();
-        System.out.print("Endereço: ");
-        String endereco = scanner.nextLine();
-        System.out.print("Categoria (Festa, Show, Esporte): ");
-        String categoria = scanner.nextLine();
-        System.out.print("Data e hora (formato: yyyy-MM-ddTHH:mm): ");
-        String dataHoraStr = scanner.nextLine();
+    private static void participarEvento() {
+        listarEventos();
+        System.out.print("Digite o número do evento para participar: ");
+        int index = scanner.nextInt();
+        scanner.nextLine();
 
-        LocalDateTime dataHora;
-        try {
-            dataHora = LocalDateTime.parse(dataHoraStr);
-        } catch (Exception e) {
-            System.out.println("Formato de data/hora inválido.");
+        if (index < 0 || index >= eventManager.getAllEvents().size()) {
+            System.out.println("Evento inválido!");
             return;
         }
 
-        System.out.print("Descrição: ");
-        String descricao = scanner.nextLine();
-
-        Event evento = new Event(nome, endereco, categoria, dataHora, descricao);
-        eventManager.addEvent(evento);
-        System.out.println("Evento cadastrado com sucesso!");
+        eventManager.participateInEvent(index, currentUser);
+        System.out.println("Participação confirmada!");
     }
 
-    private static void listarEventos() {
-        System.out.println("\nEventos cadastrados (ordenados por data):");
-        for (Event e : eventManager.getEventsOrderedByDate()) {
-            System.out.println("Nome: " + e.getName());
-            System.out.println("Categoria: " + e.getCategory());
-            System.out.println("Endereço: " + e.getAddress());
-            System.out.println("Data e Hora: " + e.getDateTime());
-            System.out.println("Descrição: " + e.getDescription());
-            System.out.println("----------------------------");
+    private static void cancelarParticipacao() {
+        List<Event> meusEventos = eventManager.getEventsUserIsParticipating(currentUser);
+        System.out.println("\nEventos que você está participando:");
+        for (int i = 0; i < meusEventos.size(); i++) {
+            Event e = meusEventos.get(i);
+            System.out.printf("%d - %s (%s) - %s\n", i, e.getName(), e.getCategory(), e.getDateTime());
+        }
+
+        System.out.print("Digite o número do evento para cancelar participação: ");
+        int index = scanner.nextInt();
+        scanner.nextLine();
+
+        if (index < 0 || index >= meusEventos.size()) {
+            System.out.println("Evento inválido!");
+            return;
+        }
+
+        Event eventoParaCancelar = meusEventos.get(index);
+        eventManager.cancelParticipation(eventManager.getAllEvents().indexOf(eventoParaCancelar), currentUser);
+        System.out.println("Participação cancelada!");
+    }
+
+    private static void listarMeusEventos() {
+        List<Event> meusEventos = eventManager.getEventsUserIsParticipating(currentUser);
+        System.out.println("\nSeus eventos:");
+        for (Event e : meusEventos) {
+            System.out.printf("- %s (%s) - %s\n", e.getName(), e.getCategory(), e.getDateTime());
         }
     }
-
-
 }

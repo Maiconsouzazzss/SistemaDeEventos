@@ -13,7 +13,7 @@ Este sistema permite o cadastro, listagem, participação e cancelamento de part
 - Persistência dos dados utilizando arquivos.
 
 ## Tecnologias Utilizadas
-- Java 17 (ou versão usada)
+- Java 21
 - Conceitos de Programação Orientada a Objetos (POO)
 - Persistência em arquivo (FileHandler)
 - Estrutura MVC (Model, View, Controller)
